@@ -4,17 +4,18 @@ import numpy as np
 from skimage.feature import local_binary_pattern
 from tqdm import tqdm
 import math
+import kagglehub
 
-sehat_path = "/Users/endah/Desktop/kuliah/sehat"
-parasit_path = "/Users/endah/Desktop/kuliah/parasit"
+# Download latest version
+path = kagglehub.dataset_download("iarunava/cell-images-for-detecting-malaria")
 
-# Path ke folder dataset
-INFECTED_DIR = parasit_path
-HEALTHY_DIR = sehat_path
+# Folder input
+INFECTED_DIR = os.path.join(path, "cell_images", "Parasitized")
+HEALTHY_DIR = os.path.join(path, "cell_images", "Uninfected")
 
 # Folder output
-INFECTED_OUT = "parasit_processed"
-HEALTHY_OUT = "sehat_processed"
+INFECTED_OUT = "parasit_output_komplit"
+HEALTHY_OUT = "sehat_output_komplit"
 
 # Buat folder output jika belum ada
 os.makedirs(INFECTED_OUT, exist_ok=True)
@@ -67,7 +68,7 @@ def process_folder(input_dir, output_dir, kernels):
 
         img = cv2.imread(in_path, cv2.IMREAD_GRAYSCALE)
         if img is None:
-            continues
+            continue
 
         processed = apply_lbp_then_gabor(img, kernels)
         cv2.imwrite(out_path, processed)
